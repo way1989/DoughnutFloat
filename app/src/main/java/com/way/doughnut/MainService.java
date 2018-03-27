@@ -97,7 +97,7 @@ public class MainService extends Service
         mFloatingView.addView(mDoughnutImageView);
         final DisplayMetrics metrics = new DisplayMetrics();
         mWindowManager.getDefaultDisplay().getMetrics(metrics);
-        mFloatingView.setOverMargin((int) (8 * metrics.density));
+        mFloatingView.setOverMargin((int) (16 * metrics.density));
         mFloatingView.addToWindow();
     }
 
@@ -157,10 +157,11 @@ public class MainService extends Service
             case DoughtnutImageView.SWIPE_TO_TOP:
                 mVibrator.vibrate(
                         mPreferences.getInt(SettingsFragment.KEY_VIBRATOR_LEVEL, SettingsFragment.DEFAULT_VIBRATE_LEVEL));
-                if (mFloatingView != null) {
-                    mFloatingView.scaleToDimiss(true);
-                }
-                startForeground(NOTIFICATION_ID, createNotification());
+                Utils.launchRecentApps(MainService.this);
+//                if (mFloatingView != null) {
+//                    mFloatingView.scaleToDimiss(true);
+//                }
+//                startForeground(NOTIFICATION_ID, createNotification());
                 break;
             case DoughtnutImageView.SWIPE_TO_BOTTOM:
                 mVibrator.vibrate(
@@ -175,7 +176,8 @@ public class MainService extends Service
             case DoughtnutImageView.SWIPE_TO_RIGHT:
                 mVibrator.vibrate(
                         mPreferences.getInt(SettingsFragment.KEY_VIBRATOR_LEVEL, SettingsFragment.DEFAULT_VIBRATE_LEVEL));
-                Utils.launchRecentApps(MainService.this);
+                //Utils.launchRecentApps(MainService.this);
+                Utils.execBackButton(MainService.this);
                 break;
             default:
                 break;
@@ -247,7 +249,8 @@ public class MainService extends Service
         mFloatMenuDialog = new Dialog(this, R.style.Theme_Dialog);
         mFloatMenuDialog.setContentView(rootView);
         mFloatMenuDialog.setCanceledOnTouchOutside(true);
-        mFloatMenuDialog.getWindow().setType(WindowManager.LayoutParams.TYPE_TOAST);
+        mFloatMenuDialog.getWindow().setType(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O ? WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY
+                : WindowManager.LayoutParams.TYPE_SYSTEM_ALERT);
         mFloatMenuDialog.getWindow().setWindowAnimations(R.style.dialog_window_anim);
         mFloatMenuDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
 

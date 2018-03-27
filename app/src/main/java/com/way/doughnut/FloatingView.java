@@ -194,8 +194,8 @@ class FloatingView extends FrameLayout implements ViewTreeObserver.OnPreDrawList
         float scale = mPreferences.getInt(SettingsFragment.KEY_FLOAT_VIEW_SIZE, 100) / 100.0f;
         mParams.width = Math.round(mOriginWidth * scale);
         mParams.height = Math.round(mOriginHeight * scale);
-        boolean smartHide = mPreferences.getBoolean(SettingsFragment.KEY_SMART_HIDE, true);
-        mParams.type = smartHide ? WindowManager.LayoutParams.TYPE_TOAST : WindowManager.LayoutParams.TYPE_SYSTEM_ALERT;
+        mParams.type = Build.VERSION.SDK_INT >= Build.VERSION_CODES.O ? WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY
+                : WindowManager.LayoutParams.TYPE_SYSTEM_ALERT;
         mParams.flags = WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE | WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS
                 | WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL;
         mParams.format = PixelFormat.TRANSLUCENT;

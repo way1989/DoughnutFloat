@@ -1,16 +1,20 @@
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion 23
-    buildToolsVersion "23.0.1"
+    compileSdkVersion 27
 
-    signingConfigs {
-        debug {
-            // No debug config
-        }
-        release {
-            def filePrivateProperties = file("../private.properties")
-            if (filePrivateProperties.exists()) {
+    defaultConfig {
+        applicationId "com.way.doughnut"
+        minSdkVersion 21
+        targetSdkVersion 27
+        versionCode 20180301
+        versionName "1.0.2"
+    }
+
+    def filePrivateProperties = file("../jks/public.properties")
+    if (filePrivateProperties.exists()) {
+        signingConfigs {
+            release {
                 Properties propsPrivate = new Properties()
                 propsPrivate.load(new FileInputStream(filePrivateProperties))
 
@@ -22,29 +26,29 @@ android {
         }
     }
 
-    defaultConfig {
-        applicationId "com.way.doughnut"
-        minSdkVersion 15
-        targetSdkVersion 23
-        versionCode 20151001
-        versionName "1.0.0"
-    }
     buildTypes {
+        debug {
+            if (filePrivateProperties.exists()) {
+                signingConfig signingConfigs.release
+            }
+        }
         release {
             minifyEnabled true
             shrinkResources true
-			signingConfig signingConfigs.release
+            if (filePrivateProperties.exists()) {
+                signingConfig signingConfigs.release
+            }
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
-  	android {
-      	lintOptions {
-          	abortOnError false
-      	}
-  	}
+    android {
+        lintOptions {
+            abortOnError false
+        }
+    }
 }
 
 dependencies {
-    compile fileTree(dir: 'libs', include: ['*.jar'])
-    compile 'com.android.support:appcompat-v7:23.0.1'
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation 'com.android.support:appcompat-v7:27.1.0'
 }
